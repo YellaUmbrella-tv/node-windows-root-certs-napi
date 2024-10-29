@@ -1,4 +1,4 @@
-
+const process = require('process');
 
 if (process.platform === 'win32'){
   var ffi = require('ffi-napi');

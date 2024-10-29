@@ -1,0 +1,25 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build_and_test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix: # macos-latest -> arm64, macos-13 -> x64
+        os: [windows-latest, ubuntu-latest]
+        node-version: [22, 20, 18]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: install dependencies and test
+        shell: bash
+        run: |
+          npm install
+          npm test
+
+
