@@ -1,9 +1,9 @@
 
 
 if (process.platform === 'win32'){
-  var ffi = require('ffi');
-  var ref = require('ref');
-  var Struct = require('ref-struct');
+  var ffi = require('ffi-napi');
+  var ref = require('ref-napi');
+  var Struct = require('ref-struct-di')(ref);
 
 /*
 typedef struct _CERT_CONTEXT {
@@ -74,7 +74,9 @@ typedef struct _CERT_CONTEXT {
 
   const DATA_BLOB = Struct({
     cbData: ref.types.uint32,
-    pbData: ref.refType(ref.types.byte)
+    pbData: ref.refType(ref.types.byte),
+    //size: ref.sizeof.uint32 + ref.sizeof.pointer,
+    //indirection: 1,
   });
   const PDATA_BLOB = new ref.refType(DATA_BLOB);
   
@@ -174,7 +176,7 @@ typedef struct _CERT_CONTEXT {
     var hStoreHandle = null;
     var pCertContext = null;   
     if (hStoreHandle = Crypto.CertOpenSystemStoreA(null, StoreName)){
-      //console.log("The "+StoreName+" store has been opened as ", hStoreHandle);
+      console.log("The "+StoreName+" store has been opened as ", hStoreHandle);
     } else {
       console.log("The "+StoreName+" store failed to open.");
       return [];
