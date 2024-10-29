@@ -1,5 +1,5 @@
 {
-  "name": "node-windows-root-certs",
+  "name": "node-windows-root-certs-napi",
   "version": "1.22.0",
   "description": "Enables read of windows root certificates using ffi, and patching of node to use them",
   "main": "index.js",
@@ -15,11 +15,11 @@
     "https",
     "windows"
   ],
-  "homepage": "https://github.com/btsimonh/node-windows-root-certs#readme",
+  "homepage": "https://github.com/YellaUmbrella-tv/node-windows-root-certs-napi#readme",
   "bugs": {
-    "url": "https://github.com/btsimonh/node-windows-root-certs/issues"
+    "url": "https://github.com/YellaUmbrella-tv/node-windows-root-certs-napi/issues"
   },
-  "repository": "github:btsimonh/node-windows-root-certs",
+  "repository": "github:YellaUmbrella-tv/node-windows-root-certs-napi",
   "dependencies": {
     "ffi-napi": "https://github.com/btsimonh/node-ffi-napi.git",
     "ref-napi": "https://github.com/btsimonh/ref-napi.git",
