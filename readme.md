@@ -1,8 +1,8 @@
-# node-windows-root-certs
+# node-windows-root-certs-napi
 
 Enables use of Windows root certificates in nodejs directly, without environment settings or certificate files.
 
-Tested on node 12.10.0
+This version runs on node 18, 20, 22 (and possibly others which have n-api v9)
 
 # Uses for this module:
 
@@ -37,10 +37,10 @@ Note: if tls is patched AFTER a successful connection to a site, then it's likel
 
 # Usage
 
-`npm install node-windows-root-certs`
+`npm install node-windows-root-certs-napi`
 
 ```
-var windowsRootCerts = require('node-windows-root-certs');
+var windowsRootCerts = require('node-windows-root-certs-napi');
 
 // to read windows root certs
 var rootCerts = windowsRootCerts.getCerts();
@@ -55,7 +55,7 @@ windowsRootCerts.patchTls( rootCerts );
 or
 
 ```
-var windowsRootCerts = require('node-windows-root-certs');
+var windowsRootCerts = require('node-windows-root-certs-napi');
 // to read the windows root certs and patch in a single command:
 windowsRootCerts.useWindowsCerts();
 ```
@@ -63,7 +63,7 @@ windowsRootCerts.useWindowsCerts();
 or - to add just some additional known certificates to the end of the existing NodeJS set:
 
 ```
-var windowsRootCerts = require('node-windows-root-certs');
+var windowsRootCerts = require('node-windows-root-certs-napi');
 var mycerts = [
   "-----BEGIN CERTIFICATE-----\nMIIF.....Da\n-----END CERTIFICATE-----",
   "-----BEGIN CERTIFICATE-----...."
@@ -134,15 +134,21 @@ Object which stores the options fields used in patchTls()
 
 console.log(windowsRootCerts.tlsOptions);
 
+## use on non-windows systems
+
+windowsRootCerts.getCerts() will always return [] (an empty array).
+
+However, I see no reason why patchTls and unPatchTls would not work, given certificates.
+
 
 # Technology
 
 windows-root-certs uses 
 
 ```
-    "ffi": "lxe/node-ffi#node-12",
-    "ref": "javihernandez/ref#node-12",
-    "ref-struct": "javihernandez/ref-struct#node-12"
+    "ffi-napi": "https://github.com/btsimonh/node-ffi-napi.git",
+    "ref-napi": "https://github.com/btsimonh/ref-napi.git",
+    "ref-struct-di": "^1.1.1"
 ```
 
 In combination, these provide the ability to call windows dll functions directly from nodejs.  In this case we use the following functions from Crypt32.dll:
@@ -161,7 +167,7 @@ tls is patched by replacing tls.createSecureContext with our own function, which
 
 # Credits
 
-The use of windows API functions directly in node would not be possible without the contributions of @TooTallNate (https://github.com/TooTallNate) - wish he would update his repos for node 12!
+The use of windows API functions directly in node would not be possible without the contributions of @TooTallNate (https://github.com/TooTallNate) - wish he would update his repos for node 12+!
 
 Thanks to these repos for inspiration:
 

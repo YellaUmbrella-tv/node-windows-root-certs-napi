@@ -48,7 +48,7 @@ if (process.platform === 'win32'){
     }).on('error', function(e) {
       console.error(e);
       readWithNoCertsCached();
-      testfailed = true;
+      testfailed = (testfailed || '')+'\n' +'readWithNodeCerts on error';
     });
   }
 
@@ -71,7 +71,7 @@ if (process.platform === 'win32'){
     }).on('error', function(e) {
       console.error(e);
       readWithWindowsCerts();
-      testfailed = true;
+      testfailed = (testfailed || '')+'\n' +'readWithNoCertsCached on error';
     });
   }
 
@@ -94,7 +94,7 @@ if (process.platform === 'win32'){
     }).on('error', function(e) {
       console.error(e);
       readWithNoCerts();
-      testfailed = true;
+      testfailed = (testfailed || '')+'\n' +'readWithWindowsCerts on error';
     });
   }
 
@@ -113,9 +113,10 @@ if (process.platform === 'win32'){
 
       res.on('end', function() {
         readWithNodePlusOne();
-        testfailed = true;
+        testfailed = (testfailed || '')+'\n' +'readWithNoCerts end callback';
       });
     }).on('error', function(e) {
+      console.log('We expect to error with "unable to get local issuer certificate"');
       console.error(e);
       readWithNodePlusOne();
     });
@@ -140,13 +141,14 @@ if (process.platform === 'win32'){
       });
     }).on('error', function(e) {
       console.error(e);
-      testfailed = true;
+      testfailed = (testfailed || '')+'\n' +'readWithNodePlusOne on error';
       finish();
     });
   }
 
   function finish(){
     if (testfailed){
+      console.log('Failures: '+testfailed);
       throw('failed');
     }
   }
