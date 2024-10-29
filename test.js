@@ -11,14 +11,14 @@ if (process.platform === 'win32'){
   console.log("Reading windows ROOT certifcate store");
   const certsROOT = windowsCerts.getCerts();
   fs.writeFileSync('windowsROOT.json', JSON.stringify(certsROOT));
-  console.log("Wrote windows certificates to windowsROOT.json");
+  console.log(`Wrote ${certsROOT.length} windows certificates to windowsROOT.json`);
   fs.writeFileSync('windowsROOT.txt', certsROOT.join('\n\n'));
   console.log("Wrote windows certificates to windowsROOT.txt");
 
   console.log("Reading windows CA certifcate store");
   const certsCA = windowsCerts.getCerts('CA');
   fs.writeFileSync('windowsCA.json', JSON.stringify(certsCA));
-  console.log("Wrote windows certificates to windowsCA.json");
+  console.log(`Wrote ${certsCA.length} windows certificates to windowsCA.json`);
   fs.writeFileSync('windowsCA.txt', certsCA.join('\n\n'));
   console.log("Wrote windows certificates to windowsCA.txt");
 
@@ -32,7 +32,7 @@ if (process.platform === 'win32'){
 
   // no tls modification
   function readWithNodeCerts() {
-    console.log("readWithNodeCerts");
+    console.log("readWithNodeCerts https://google.com");
     https.get('https://google.com', function(res) {
       
       console.log("statusCode: ", res.statusCode);
@@ -54,7 +54,7 @@ if (process.platform === 'win32'){
 
   // modify tls to have no certs, but access google.com again
   function readWithNoCertsCached() {
-    console.log("readWithNoCerts - Cached connection");
+    console.log("readWithNoCerts - Cached connection https://google.com");
     windowsCerts.patchTls( [] );
     https.get('https://google.com', function(res) {
       
@@ -77,9 +77,9 @@ if (process.platform === 'win32'){
 
   // use Windows ROOT certs
   function readWithWindowsCerts() {
-    console.log("readWithWindowsCerts");
+    console.log("readWithWindowsCerts https://amazon.co.uk");
     windowsCerts.useWindowsCerts();
-    https.get('https://ibm.com', function(res) {
+    https.get('https://amazon.co.uk', function(res) {
       
       console.log("statusCode: ", res.statusCode);
       console.log("headers: ", res.headers);
@@ -100,7 +100,7 @@ if (process.platform === 'win32'){
 
   // use no certs, and access a new site
   function readWithNoCerts() {
-    console.log("readWithNoCerts");
+    console.log("readWithNoCerts https://amazon.com");
     windowsCerts.patchTls( [] );
     https.get('https://amazon.com', function(res) {
       
@@ -125,7 +125,7 @@ if (process.platform === 'win32'){
   //https://badssl.com/certs/ca-untrusted-root.crt
   // add one additional cert to node's defaults
   function readWithNodePlusOne() {
-    console.log("readWithNodePlusOne");
+    console.log("readWithNodePlusOne https://example.com/");
     windowsCerts.patchTls( oneBadCert, { includeNodeCerts: true } );
     https.get('https://example.com/', function(res) {
       
