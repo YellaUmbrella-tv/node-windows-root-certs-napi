@@ -72,6 +72,22 @@ typedef struct _CERT_CONTEXT {
 } CERT_CONTEXT, *PCERT_CONTEXT;
 */
 
+  const t = windowstypes = {
+    "BOOL":   "int",
+    "INT":    "int",
+    "UINT":   "uint",
+    "ULONG":  "ulong",
+    "DWORD":  "ulong",
+    "HKL":    "void*",
+    "ULONG_PTR": "ulong",
+    "LONG":   "long",
+    "HANDLE": "uint64",
+    "WORD":   "uint16",
+    "TCHAR":  "uint16",  // assuming unicode. (ASCII is char, UNICODE is WCHAR -&gt; wchar_t -&gt; unsigned short === UINT16 === uint16
+    "LPCWSTR": "uint16*",
+  };
+
+
   const DATA_BLOB = Struct({
     cbData: ref.types.uint32,
     pbData: ref.refType(ref.types.byte),
@@ -130,15 +146,15 @@ typedef struct _CERT_CONTEXT {
     pbCertEncoded: 'pointer', 
     cbCertEncoded: ref.types.uint32,
     pCertInfo: PCERT_INFO,
-    hCertStore: 'pointer',
+    hCertStore: t.HANDLE,
   });
   const PCERT_CONTEXT = new ref.refType(CERT_CONTEXT);
   
   const Crypto = new ffi.Library('Crypt32', {
-      CertOpenSystemStoreA: [ 'void *', ['void *', 'string']],
-      CertEnumCertificatesInStore: [ PCERT_CONTEXT, ['void *', PCERT_CONTEXT]],
+      CertOpenSystemStoreA: [ t.HANDLE, [t.HANDLE, 'string']],
+      CertEnumCertificatesInStore: [ PCERT_CONTEXT, [t.HANDLE, PCERT_CONTEXT]],
       CertFreeCertificateContext: [ 'bool', [PCERT_CONTEXT] ],
-      CertCloseStore: [ 'bool', ['void *', 'void *']],
+      CertCloseStore: [ 'bool', [t.HANDLE, t.DWORD]],
   });
 
   function dumpblob(b, encoding) {
@@ -175,7 +191,7 @@ typedef struct _CERT_CONTEXT {
     
     var hStoreHandle = null;
     var pCertContext = null;   
-    if (hStoreHandle = Crypto.CertOpenSystemStoreA(null, StoreName)){
+    if (hStoreHandle = Crypto.CertOpenSystemStoreA(0, StoreName)){
       console.log("The "+StoreName+" store has been opened as ", hStoreHandle);
     } else {
       console.log("The "+StoreName+" store failed to open.");
